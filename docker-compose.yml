@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  django:
+    build: ./idea2point0
+    ports:
+      - 3000:3000
+    volumes:
+      - ./blog_python/:/code/
+    depends_on:
+      - db
+        
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=django
+      - POSTGRES_PASSWORD=django
+      - POSTGRES_DB=django
+
+volumes:
+  postgres_data:
