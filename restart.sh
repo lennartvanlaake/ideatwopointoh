@@ -1,1 +1,1 @@
-sudo docker-compose restart
+python idea2point0/manage.py makemigrations && python idea2point0/manage.py migrate && python idea2point0/manage.py runserver 8001
