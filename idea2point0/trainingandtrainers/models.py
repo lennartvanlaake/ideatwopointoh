@@ -29,6 +29,7 @@ class IdeaTraining(Page):
     doekmans = models.CharField(max_length=250)
     demo = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
 
+
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),

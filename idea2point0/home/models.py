@@ -6,6 +6,11 @@ from wagtail.admin.edit_handlers import FieldPanel
 class HomePage(Page):
     body = RichTextField(blank=True)
 
+    def get_context(self, request, *args, **kwargs):
+        context = super(HomePage, self).get_context(request, *args, **kwargs)
+        context['menuitems'] = self.get_children().filter(live=True)
+        return context
+
     content_panels = Page.content_panels + [
         FieldPanel('body', classname="full"),
     ]
