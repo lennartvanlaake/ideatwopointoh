@@ -5,3 +5,4 @@ node_modules
 .next
 .vscode
 blog_python/media
+*.sqlite3
