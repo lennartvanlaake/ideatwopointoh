@@ -7,6 +7,7 @@ from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.search import index
 from django.core.validators import FileExtensionValidator
+from copy import deepcopy
 from trainingandtrainers.utils import *
 
 # permission pages
@@ -65,14 +66,15 @@ TRAININGEVENT_CHOICES = [
 class IdeaTrainingIndex(Page, RoutablePageMixin):
     child_page_types = ['trainingandtrainers.models.TrainingContent','trainingandtrainers.models.AllContent' ]
     select_properties = (PageSelectProperty('level','Level', LEVEL_CHOICES),
-                         PageSelectProperty('category', 'Cateory', CATEGORY_CHOICES),
+                         PageSelectProperty('category', 'Category', CATEGORY_CHOICES),
                          PageSelectProperty('language', 'Language', LANGUAGE_CHOICES))
-    query_properties =  ('title', 'summary')
+    query_properties = ('summary', 'title')
     
     def get_context(self, request):
         context = super().get_context(request)
         trainings = TrainingContent.objects.all()
-        context['trainings'] = trainings
+        context['select_properties'] = deepcopy(self.select_properties)
+        context['trainings'] = filter_pages(trainings, request, deepcopy(self.select_properties), deepcopy(self.query_properties))
         context['url'] = self.get_url(request)
         return context
 
@@ -121,7 +123,7 @@ class AllContent(Page):
     summary = models.CharField(max_length=3000)
     training = models.FileField(upload_to='trainings/',
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
-    
+
     search_fields = Page.search_fields + [
         index.SearchField('subject'),
         index.SearchField('targetAudience'),
@@ -187,7 +189,7 @@ class TTTEvent(Page):
     contactemail = models.CharField("Contact Emailadresss",max_length=100,blank=True)
     contactwebsite = models.CharField("Contact website",max_length=100,blank=True)
     description = models.CharField(max_length=3000)
-    trainer1 = models.CharField(max_length=100)
+    trainer1 = models.CharField(max_length=100,  default="")
     trainer2 = models.CharField(max_length=100,blank=True)
     trainer3 = models.CharField(max_length=100,blank=True)
     typetraining = models.CharField("type of training",max_length=100,blank=True,choices=TRAININGEVENT_CHOICES )
