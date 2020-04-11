@@ -7,21 +7,10 @@ from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.search import index
 from django.core.validators import FileExtensionValidator
+from trainingandtrainers.utils import *
 
-class IdeaTrainingIndex(RoutablePageMixin, Page):
-
-    @route(r'^search/$')
-    def post_search(self, request, *args, **kwargs):
-        search_query = request.GET.get('q', None)
-        self.children = self.children
-        print(self)
-        if search_query:
-            self.children = self.children.filter(intro__contains=search_query)
-            self.search_term = search_query
-            self.search_type = 'search'
-        return Page.serve(self, request, *args, **kwargs)
-    intro = RichTextField(blank=True)
-
+exact_match_properties = ('level', 'category', 'targetAudience')
+contains_properties = ('title', 'summary')
 
 YEAR_IN_SCHOOL_CHOICES = [
     ('FR', 'Freshman'),
@@ -56,26 +45,33 @@ CATEGORY_CHOICES = [
     ('Pedagogy',    'Pedagogy Content'),
 ]
 
-class IdeaTrainingIndex(Page):
+class IdeaTrainingIndex(Page, RoutablePageMixin):
+    child_page_types = ['trainingandtrainers.models.IdeaTraining']
+    select_properties = (PageSelectProperty('level', LEVEL_CHOICES),
+                         PageSelectProperty('category', CATEGORY_CHOICES),
+                         PageSelectProperty('language', LANGUAGE_CHOICES))
+    query_properties =  ('title', 'summary')
+    
+    def get_context(self, request):
+        context = super().get_context(request)
+        trainigs = IdeaTraining.objects.all()
+        context['trainings'] = filter_pages(trainigs, request, exact_match_properties, contains_properties)
+        context['url'] = self.get_url(request)
+        return context
+
     intro = RichTextField(blank=True)
 
-    content_panels = Page.content_panels + [
-        FieldPanel('intro', classname="full")
-    ]
-
-
-
-
 class IdeaTraining(Page):
+
     date = models.DateField("Training created", auto_now = True)
-    subject = models.CharField(max_length=100)
-    targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
-    level =  models.CharField(choices=LEVEL_CHOICES, max_length=250)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=250)
-    language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
-    summary = models.CharField(max_length=3000)
+    subject = models.CharField(max_length=100, default="")
+    targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, default="")
+    level =  models.CharField(choices=LEVEL_CHOICES, max_length=250, default="")
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=250, default="")
+    language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250, default="")
+    summary = models.CharField(max_length=3000, default="")
     training = models.FileField(upload_to='trainings/',
-                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
 
 
     search_fields = Page.search_fields + [
@@ -105,12 +101,12 @@ class Trainer(Page):
     profilePicture = models.ImageField(upload_to='trainers/',
                                 validators=[FileExtensionValidator(allowed_extensions=['jpg','png,'])])
     #date = models.DateField("Training created", auto_now = True)
-    name = models.CharField(max_length=100)
-    age = models.IntegerField()
-    city =  models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, default="")
+    age = models.IntegerField(default=0)
+    city =  models.CharField(max_length=100, default="")
+    country = models.CharField(max_length=100, default="")
     #languagesSpoken = models.MultiSelectField(choices=LANGUAGE_CHOICES, max_length=250)
-    shortBio = models.CharField(max_length=3000)
+    shortBio = models.CharField(max_length=3000, default="")
 
     search_fields = Page.search_fields + [
         index.SearchField('name'),
@@ -130,13 +126,13 @@ class Trainer(Page):
 class TrainingEvent(Page):
     Title = models.CharField(max_length=100)
     date = models.DateTimeField("date and time of event")
-    street = models.CharField("Street and number",max_length=100)
-    city =  models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
+    street = models.CharField("Street and number",max_length=100, default="")
+    city =  models.CharField(max_length=100, default="")
+    country = models.CharField(max_length=100, default="")
     contactemail = models.CharField("Contact Emailadresss",max_length=100,blank=True)
     contactwebsite = models.CharField("Contact website",max_length=100,blank=True)
-    description = models.CharField(max_length=3000)
-    trainer1 = models.CharField(max_length=100)
+    description = models.CharField(max_length=3000, default="")
+    trainer1 = models.CharField(max_length=100, default="")
     trainer2 = models.CharField(max_length=100,blank=True)
     trainer3 = models.CharField(max_length=100,blank=True)
 

@@ -6,3 +6,4 @@ node_modules
 .vscode
 blog_python/media
 db.sqlite3
+__pycache__
