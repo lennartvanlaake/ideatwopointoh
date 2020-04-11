@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'home',
     'search',
     'trainingandtrainers',
+    'wagtail.contrib.routable_page',
     'wagtail.contrib.modeladmin',
     'wagtailmenus',
     'wagtail.contrib.forms',
