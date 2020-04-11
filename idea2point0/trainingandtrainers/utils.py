@@ -1,7 +1,8 @@
 class PageSelectProperty():
-    def __init__(self, name, options):
+    def __init__(self, name, display, options):
         self.name = name
         self.options = options 
+        self.display = display
 
 def filter_pages(pages, request, exact_match_properties, contains_properties):
     new_pages = []
