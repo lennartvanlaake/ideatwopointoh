@@ -7,6 +7,7 @@ from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.search import index
 from django.core.validators import FileExtensionValidator
+from trainingandtrainers.utils import *
 
 # permission pages
 class TrainerPermission(Page):
@@ -21,20 +22,6 @@ class MasterTrainerPermission(Page):
 class SteeringComPermission(Page):
 
     subpage_types = ['AllContent', 'TTTEvent','BlankNewPage']
-
-class IdeaTrainingIndex(RoutablePageMixin, Page):
-
-    @route(r'^search/$')
-    def post_search(self, request, *args, **kwargs):
-        search_query = request.GET.get('q', None)
-        self.children = self.children
-        print(self)
-        if search_query:
-            self.children = self.children.filter(intro__contains=search_query)
-            self.search_term = search_query
-            self.search_type = 'search'
-        return Page.serve(self, request, *args, **kwargs)
-    intro = RichTextField(blank=True)
 
 
 YEAR_IN_SCHOOL_CHOICES = [
@@ -75,7 +62,21 @@ TRAININGEVENT_CHOICES = [
     ('TTT',         'Train-the-Trainer')
 ]
 
+class IdeaTrainingIndex(Page, RoutablePageMixin):
+    child_page_types = ['trainingandtrainers.models.TrainingContent','trainingandtrainers.models.AllContent' ]
+    select_properties = (PageSelectProperty('level','Level', LEVEL_CHOICES),
+                         PageSelectProperty('category', 'Cateory', CATEGORY_CHOICES),
+                         PageSelectProperty('language', 'Language', LANGUAGE_CHOICES))
+    query_properties =  ('title', 'summary')
+    
+    def get_context(self, request):
+        context = super().get_context(request)
+        trainings = TrainingContent.objects.all()
+        context['trainings'] = trainings
+        context['url'] = self.get_url(request)
+        return context
 
+    intro = RichTextField(blank=True)
 
 
 class TrainingContent(Page):
@@ -222,13 +223,13 @@ class TrainingEvent(Page):
 
     Title = models.CharField(max_length=100)
     date = models.DateTimeField("date and time of event")
-    street = models.CharField("Street and number",max_length=100)
-    city =  models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
+    street = models.CharField("Street and number",max_length=100, default="")
+    city =  models.CharField(max_length=100, default="")
+    country = models.CharField(max_length=100, default="")
     contactemail = models.CharField("Contact Emailadresss",max_length=100,blank=True)
     contactwebsite = models.CharField("Contact website",max_length=100,blank=True)
-    description = models.CharField(max_length=3000)
-    trainer1 = models.CharField(max_length=100)
+    description = models.CharField(max_length=3000, default="")
+    trainer1 = models.CharField(max_length=100, default="")
     trainer2 = models.CharField(max_length=100,blank=True)
     trainer3 = models.CharField(max_length=100,blank=True)
     typetraining = models.CharField("type of training",max_length=100,blank=True,default='Training' )
