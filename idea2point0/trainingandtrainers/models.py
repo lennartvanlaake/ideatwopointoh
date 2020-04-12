@@ -7,6 +7,7 @@ from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.search import index
 from django.core.validators import FileExtensionValidator
+from copy import deepcopy
 from trainingandtrainers.utils import *
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 
@@ -15,7 +16,6 @@ class TrainerPermission(Page):
 
     subpage_types = ['TrainingContent','TrainingEvent', 'Trainer' ]
     
-
 class MasterTrainerPermission(Page):
 
     subpage_types = ['TrainingContent', 'TTTEvent']
@@ -63,18 +63,22 @@ TRAININGEVENT_CHOICES = [
     ('TTT',         'Train-the-Trainer')
 ]
 
+class TrainingIndexChildren():
+    pass
+
 class IdeaTrainingIndex(Page, RoutablePageMixin):
-    child_page_types = ['trainingandtrainers.models.TrainingContent','trainingandtrainers.models.AllContent' ]
+    child_page_types = ['TrainerPermission','MasterTrainerPermission']
     select_properties = (PageSelectProperty('level','Level', LEVEL_CHOICES),
                          PageSelectProperty('category', 'Cateory', CATEGORY_CHOICES),
                          PageSelectProperty('targetAudience', 'Target Audience', YEAR_IN_SCHOOL_CHOICES),
                          PageSelectProperty('language', 'Language', LANGUAGE_CHOICES))
-    query_properties =  ('title', 'summary')
+    query_properties = ('summary', 'title')
     
     def get_context(self, request):
         context = super().get_context(request)
-        trainings = TrainingContent.objects.all()
-        context['trainings'] = trainings
+        children = filter_children(self, TrainingIndexChildren)
+        context['select_properties'] = self.select_properties
+        context['trainings'] = filter_pages(children, request, self.select_properties, self.query_properties)
         context['url'] = self.get_url(request)
         return context
 
@@ -110,7 +114,7 @@ class IdeaTrainerIndex(Page, RoutablePageMixin):
     intro = RichTextField(blank=True)
 
 
-class TrainingContent(Page):
+class TrainingContent(Page, TrainingIndexChildren):
     parent_page_types = ['TrainerPermission','MasterTrainerPermission']
 
     date = models.DateField("Training created", auto_now = True)
@@ -138,7 +142,7 @@ class TrainingContent(Page):
         FieldPanel('training')
     ]
 
-class AllContent(Page):
+class AllContent(Page, TrainingIndexChildren):
     parent_page_types = ['SteeringComPermission']
 
     date = models.DateField("Training created", auto_now = True)
@@ -149,7 +153,7 @@ class AllContent(Page):
     summary = models.CharField(max_length=3000)
     training = models.FileField(upload_to='trainings/',
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
-    
+
     search_fields = Page.search_fields + [
         index.SearchField('targetAudience'),
         index.SearchField('level'),
@@ -228,7 +232,7 @@ class TTTEvent(Page):
     contactemail = models.CharField("Contact Emailadresss",max_length=100,blank=True)
     contactwebsite = models.CharField("Contact website",max_length=100,blank=True)
     description = models.CharField(max_length=3000)
-    trainer1 = models.CharField(max_length=100)
+    trainer1 = models.CharField(max_length=100,  default="")
     trainer2 = models.CharField(max_length=100,blank=True)
     trainer3 = models.CharField(max_length=100,blank=True)
     typetraining = models.CharField("type of training",max_length=100,blank=True,choices=TRAININGEVENT_CHOICES )
