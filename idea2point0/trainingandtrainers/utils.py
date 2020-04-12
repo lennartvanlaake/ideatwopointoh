@@ -62,7 +62,6 @@ def apply_query(page, request, contains_properties):
 def contains(first, second):
     return first.lower() in second.lower()
 
-
 def apply_filters(page, request, exact_match_properties):
     match = True
     typed_page = page.specific
@@ -71,7 +70,7 @@ def apply_filters(page, request, exact_match_properties):
         filter_choice = get_request_param(request, prop_name)
         if not hasattr(typed_page, prop_name):
             continue
-        if filter_choice is None or filter_choice is "":
+        if filter_choice is None or filter_choice == "":
             continue
         if filter_choice is not getattr(typed_page, prop_name):
             match = False
