@@ -15,7 +15,6 @@ class TrainerPermission(Page):
 
     subpage_types = ['TrainingContent','TrainingEvent', 'Trainer' ]
     
-
 class MasterTrainerPermission(Page):
 
     subpage_types = ['TrainingContent', 'TTTEvent']
@@ -63,8 +62,11 @@ TRAININGEVENT_CHOICES = [
     ('TTT',         'Train-the-Trainer')
 ]
 
+class TrainingIndexChildren():
+    pass
+
 class IdeaTrainingIndex(Page, RoutablePageMixin):
-    child_page_types = ['trainingandtrainers.models.TrainingContent','trainingandtrainers.models.AllContent' ]
+    child_page_types = ['TrainerPermission','MasterTrainerPermission']
     select_properties = (PageSelectProperty('level','Level', LEVEL_CHOICES),
                          PageSelectProperty('category', 'Category', CATEGORY_CHOICES),
                          PageSelectProperty('language', 'Language', LANGUAGE_CHOICES))
@@ -72,16 +74,16 @@ class IdeaTrainingIndex(Page, RoutablePageMixin):
     
     def get_context(self, request):
         context = super().get_context(request)
-        trainings = TrainingContent.objects.all()
-        context['select_properties'] = deepcopy(self.select_properties)
-        context['trainings'] = filter_pages(trainings, request, deepcopy(self.select_properties), deepcopy(self.query_properties))
+        children = filter_children(self, TrainingIndexChildren)
+        context['select_properties'] = self.select_properties
+        context['trainings'] = filter_pages(children, request, self.select_properties, self.query_properties)
         context['url'] = self.get_url(request)
         return context
 
     intro = RichTextField(blank=True)
 
 
-class TrainingContent(Page):
+class TrainingContent(Page, TrainingIndexChildren):
     parent_page_types = ['TrainerPermission','MasterTrainerPermission']
 
     date = models.DateField("Training created", auto_now = True)
@@ -111,7 +113,7 @@ class TrainingContent(Page):
         FieldPanel('training')
     ]
 
-class AllContent(Page):
+class AllContent(Page, TrainingIndexChildren):
     parent_page_types = ['SteeringComPermission']
 
     date = models.DateField("Training created", auto_now = True)

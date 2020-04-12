@@ -1,3 +1,5 @@
+
+
 class PageSelectProperty():
     def __init__(self, name, display, options):
         self.name = name
@@ -11,6 +13,17 @@ class PageSelectOption():
 
 def parse_options(option_tuples):
     return map(lambda option: PageSelectOption(option[0], option[1]), option_tuples)
+
+def filter_children(page, clazz):
+    children = page.get_children()
+    content_children = []
+    for child in children:
+        for grandchild in child.get_children():
+            typed_grandchild = grandchild.specific
+            if isinstance(typed_grandchild, clazz):
+                content_children.append(grandchild)
+    return content_children
+
 
 def filter_pages(pages, request, exact_match_properties, contains_properties):
     new_pages = []
@@ -36,6 +49,8 @@ def apply_query(page, request, contains_properties):
     if query_string is None:
         return True
     for prop in contains_properties:
+        if not hasattr(page, prop):
+            continue
         if query_string.lower() in getattr(page, prop).lower():
             return True
     return False
@@ -45,6 +60,8 @@ def apply_filters(page, request, exact_match_properties):
     for prop in exact_match_properties:
         prop_name = prop.name
         filter_choice = get_request_param(request, prop_name)
+        if not hasattr(page, prop_name):
+            continue
         if filter_choice is None:
             continue
         if filter_choice is not getattr(page, prop_name):
