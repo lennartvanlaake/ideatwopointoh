@@ -51,19 +51,28 @@ def apply_query(page, request, contains_properties):
     for prop in contains_properties:
         if not hasattr(page, prop):
             continue
-        if query_string.lower() in getattr(page, prop).lower():
+        if isinstance(prop, tuple):
+            for sub_prop in prop:     
+                if contains(query_string, getattr(page, sub_prop)):
+                    return True  
+        if contains(query_string, getattr(page, prop)):
             return True
     return False
 
+def contains(first, second):
+    return first.lower() in second.lower()
+
+
 def apply_filters(page, request, exact_match_properties):
     match = True
+    typed_page = page.specific
     for prop in exact_match_properties:
         prop_name = prop.name
         filter_choice = get_request_param(request, prop_name)
-        if not hasattr(page, prop_name):
+        if not hasattr(typed_page, prop_name):
             continue
-        if filter_choice is None:
+        if filter_choice is None or filter_choice is "":
             continue
-        if filter_choice is not getattr(page, prop_name):
+        if filter_choice is not getattr(typed_page, prop_name):
             match = False
     return match

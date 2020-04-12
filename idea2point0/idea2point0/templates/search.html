@@ -16,6 +16,7 @@
         <label class="col-md-4 control-label" for="selectbasic">{{ property.display }}</label>
         <div class="col-md-4">
             <select id="{{ property.name }}" name="{{ property.name }}" class="form-control">
+            <option value="">Any</option>
             {% for option in property.options %}
                 <option value="{{ option.key }}">{{ option.display }}</option>
             {% endfor %}
