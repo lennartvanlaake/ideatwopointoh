@@ -1,11 +1,12 @@
 from .base import *
-try:
-    from .local import *
+
+from .local import *
 except ImportError:
     pass
 
 DEBUG = False
 
+SECRET_KEY = os.environ["SECRET_KEY"]
 password = os.environ['POSTGRES_PASSWORD']
 DATABASES = {
     'default': {
