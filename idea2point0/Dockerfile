@@ -2,9 +2,15 @@
 FROM python:3.7
 LABEL maintainer="hello@wagtail.io"
 
+ARG SECRET_KEY
+ENV SECRET_KEY $SECRET_KEY
+
+ARG POSTGRES_PASSWORD
+ENV POSTGRES_PASSWORD $POSTGRES_PASSWORD
+
 # Set environment varibles
 ENV PYTHONUNBUFFERED 1
-ENV DJANGO_ENV dev
+ENV DJANGO_ENV prod
 
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install --upgrade pip
