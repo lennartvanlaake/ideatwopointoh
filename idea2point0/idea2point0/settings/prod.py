@@ -6,6 +6,7 @@ except ImportError:
 
 DEBUG = False
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'empoweryouth2debate.com' ] 
 SECRET_KEY = os.environ["SECRET_KEY"]
 password = os.environ['POSTGRES_PASSWORD']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
