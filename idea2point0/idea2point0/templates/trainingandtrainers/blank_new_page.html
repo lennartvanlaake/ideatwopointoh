@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-training{% endblock %}
+
+{% block content %}
+    <h4>{{page.title}}</h4>
+    <p class="meta">{{ page.date }}</p>
+    
+    {{ page.body|richtext }}
+
+    <p><a href="{{ page.get_parent.url }}">Return to index</a></p>
+
+{% endblock %}
