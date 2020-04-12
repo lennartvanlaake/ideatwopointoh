@@ -1,9 +1,5 @@
 from .base import *
 
-from .local import *
-except ImportError:
-    pass
-
 DEBUG = False
 
 SECRET_KEY = os.environ["SECRET_KEY"]
