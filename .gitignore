@@ -9,3 +9,4 @@ node_modules
 blog_python/media
 db.sqlite3
 __pycache__
+static/admin**
