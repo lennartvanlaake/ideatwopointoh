@@ -15,7 +15,7 @@ DATABASES = {
         'NAME': 'django',
         'USER': 'idea',
         'PASSWORD': password,
-        'HOST': 'localhost',
+        'HOST': 'empoweryouth2debate.com',
         'PORT': '5432',
     }
 }
