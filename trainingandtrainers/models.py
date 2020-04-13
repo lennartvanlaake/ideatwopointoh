@@ -92,7 +92,7 @@ class IdeaTrainingIndex(Page, RoutablePageMixin):
         return context
 
     intro = RichTextField(blank=True)
-  
+
     content_panels = Page.content_panels + [
         FieldPanel('intro')
     ]
@@ -100,6 +100,7 @@ class IdeaTrainingIndex(Page, RoutablePageMixin):
 
 class SearchableEvent:
     pass
+
 
 class IdeaEventIndex(Page, RoutablePageMixin):
     subpage_types = ['TrainingEventsCollection', 'TrainTheTrainerEventsCollection']
@@ -134,7 +135,6 @@ class IdeaTrainerIndex(Page, RoutablePageMixin):
     content_panels = Page.content_panels + [
         FieldPanel('intro')
     ]
-    
 
 
 class PedagogyContent(Page, SearchableTrainingContent):
@@ -207,8 +207,10 @@ class DebateContent(Page, SearchableTrainingContent):
         FieldPanel('targetAudience4')
     ]
 
-    def get_audiences(self):
-        return filter(list(self.targetAudience1, self.targetAudience2, self.targetAudience3, self.targetAudience4))
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['audiences'] = [self.targetAudience1, self.targetAudience2, self.targetAudience3, self.targetAudience4]
+        return context
 
 
 class TrainingContent(Page, SearchableTrainingContent):
@@ -267,7 +269,6 @@ class Trainer(Page):
     languagesSpoken3 = models.CharField(choices=LANGUAGE_CHOICES, max_length=250, blank=True)
     shortBio = models.CharField(max_length=3000)
 
-
     search_fields = Page.search_fields + [
         index.SearchField('firstName'),
         index.SearchField('lastName'),
@@ -298,8 +299,10 @@ class Trainer(Page):
                 raise ValidationError(ValidationError('Invalid value'))
         super().save(*args, **kwargs)
 
-    def get_languages(self):
-        return filter(list(self.languagesSpoken1, self.languagesSpoken2, self.languagesSpoken3))
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['languages'] = [self.languagesSpoken1, self.languagesSpoken2, self.languagesSpoken3]
+        return context
 
 
 class TTTEvent(Page, SearchableEvent):
@@ -337,6 +340,11 @@ class TTTEvent(Page, SearchableEvent):
         FieldPanel('trainer2'),
         FieldPanel('trainer3')
     ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['trainers'] = [self.trainer1, self.trainer2, self.trainer3]
+        return context
 
 
 class TrainingEvent(Page, SearchableEvent):
@@ -376,6 +384,11 @@ class TrainingEvent(Page, SearchableEvent):
         FieldPanel('trainer2'),
         FieldPanel('trainer3')
     ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['trainers'] = [self.trainer1, self.trainer2, self.trainer3]
+        return context
 
 
 class BlankNewPage(Page):
