@@ -15,8 +15,8 @@
 
 
 <div class="w3-container">
-        <ul class="w3-ul w3-card w3-hoverable" class="w3-button">   
-        {% for post in trainings %}
+    <ul class="w3-ul w3-card w3-hoverable" class="w3-button">   
+        {% for post in trainers %}
             
                 <li>
                     <div class="w3-row">
@@ -26,7 +26,7 @@
                                     <h1>{{ post.title }}</h1>
                                 </div>
                                 <p>
-                                Category: {{post.specific.category}}, Level: {{post.specific.level}}, Target audience: {{post.specific.targetaudience}}
+                                {% comment %} Category: {{post.specific.category}}, Level: {{post.specific.level}}, Target audience: {{post.specific.targetaudience}} {% endcomment %}
                                 </p>
                             </div>
                         </a>
@@ -40,11 +40,9 @@
                     </div>
                 </li>
             </a>  
-            {% endfor %}        
-        </ul>
-        <br>
-        <br>
-
-
+        {% endfor %}        
+    </ul>
+    <br>
+    <br>
+</div>
 {% endblock %}
-

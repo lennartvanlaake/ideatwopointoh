@@ -91,21 +91,34 @@ class IdeaTrainingIndex(Page, RoutablePageMixin):
         return context
 
     intro = RichTextField(blank=True)
+  
+    content_panels = Page.content_panels + [
+        FieldPanel('intro')
+    ]
 
+
+class SearchableEvent:
+    pass
 
 class IdeaEventIndex(Page, RoutablePageMixin):
     subpage_types = ['TrainingEventsCollection', 'TrainTheTrainerEventsCollection']
-    select_properties = (PageSelectProperty('typeTraining', 'training Type', TRAININGEVENT_CHOICES))
+    select_properties = [PageSelectProperty('typeTraining', 'training Type', TRAININGEVENT_CHOICES)]
     query_properties = ('title', 'date', 'city', 'country', 'trainer1', 'trainer2', 'trainer3')
 
     def get_context(self, request):
         context = super().get_context(request)
-        events = TrainingEvent.objects.all()
-        context['events'] = events
+        children = filter_children(self, SearchableEvent)
+        context['events'] = filter_pages(children, request, self.select_properties, self.query_properties)
         context['url'] = self.get_url(request)
+        context['select_properties'] = self.select_properties
+        
         return context
 
     intro = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('intro')
+    ]
 
 
 class IdeaTrainerIndex(Page, RoutablePageMixin):
@@ -116,12 +129,17 @@ class IdeaTrainerIndex(Page, RoutablePageMixin):
 
     def get_context(self, request):
         context = super().get_context(request)
-        trainers = TrainingEvent.objects.all()
+        trainers = filter_children(self, Trainer)
         context['trainers'] = trainers
+        context['select_properties'] = self.select_properties
         context['url'] = self.get_url(request)
         return context
 
     intro = RichTextField(blank=True)
+    content_panels = Page.content_panels + [
+        FieldPanel('intro')
+    ]
+    
 
 
 class PedagogyContent(Page, SearchableTrainingContent):
@@ -222,6 +240,7 @@ class Trainer(Page):
     languagesSpoken3 = models.CharField(choices=LANGUAGE_CHOICES, max_length=250, blank=True)
     shortBio = models.CharField(max_length=3000)
     # python alreadyExists = models.IntegerField(default=0)
+  
 
     search_fields = Page.search_fields + [
         index.SearchField('firstName'),
@@ -254,7 +273,7 @@ class Trainer(Page):
         super().save(*args, **kwargs)
 
 
-class TTTEvent(Page):
+class TTTEvent(Page, SearchableEvent):
     date = models.DateTimeField("date and time of event")
     street = models.CharField("Street and number", max_length=100)
     city = models.CharField(max_length=100)
@@ -265,7 +284,7 @@ class TTTEvent(Page):
     trainer1 = models.CharField(max_length=100, default="")
     trainer2 = models.CharField(max_length=100, blank=True)
     trainer3 = models.CharField(max_length=100, blank=True)
-    typetraining = models.CharField("type of training", max_length=100, blank=True, choices=TRAININGEVENT_CHOICES)
+    typetraining = models.CharField("type of training", max_length=100, default="TTT")
 
     search_fields = Page.search_fields + [
         index.SearchField('date'),
@@ -287,12 +306,11 @@ class TTTEvent(Page):
         FieldPanel('description'),
         FieldPanel('trainer1'),
         FieldPanel('trainer2'),
-        FieldPanel('trainer3'),
-        FieldPanel('typetraining')
+        FieldPanel('trainer3')
     ]
 
 
-class TrainingEvent(Page):
+class TrainingEvent(Page, SearchableEvent):
     Title = models.CharField(max_length=100)
     date = models.DateTimeField("date and time of event")
     street = models.CharField("Street and number", max_length=100, default="")

@@ -1,57 +1,81 @@
-<form role="search" method="get" class="form-search" name="query">
-    <fieldset>
-        <div class="w3-container">
-  <h2>Form Elements in a Grid</h2>
-  <p>In this example, we use W3.CSS' Responsive Grid System to make the inputs appear on the same line (on smaller screens, they will stack horizontally with 100% width). You will learn more about this later.</p>
-</div>
-<div class="w3-row-padding">
-<input class="w3-input w3-border" type="text">
-</div>
-<br>
-<div class="w3-row-padding">
-  <div class="w3-third">
-    <input class="w3-input w3-border" type="text" placeholder="One">
-  </div>
-  <div class="w3-third">
-    <input class="w3-input w3-border" type="text" placeholder="Two">
-  </div>
-  <div class="w3-third">
-    <input class="w3-input w3-border" type="text" placeholder="Three">
-  </div>
-</div>
-<br>
-
-<div class="w3-row-padding">
-  <div class="w3-third">
-    <input class="w3-input w3-border" type="text" placeholder="AA">
-  </div>
-  <div class="w3-third">
-    <input class="w3-input w3-border" type="text" placeholder="BB">
-  </div>
-  <div class="w3-third">
-    <input class="w3-input w3-border" type="text" placeholder="CC">
-  </div>
-</div>
-
-<div class="form-group">
-    {% comment %} <label class="col-md-4 control-label" for="query">Search</label>   {% endcomment %}
-    <div class="col-md-4">
-    <input id="query" name="query" type="text" class="form-control input-md" placeholder="Search">
+<form role="search" method="get" class="form-search" name="query">  
+    <div class="w3-container "style="margin:32px 100px">
+        <br>
+        <div class="w3-row-padding">
+            <div class="w3-col s8">   
+                <input id="query" name="query" class="w3-input w3-border" type="text" placeholder="Search">
+            </div>
+            <div class="w3-third">
+                <button class="w3-row-padding w3-btn w3-yellow">Search</button>
+            </div>
+        </div>
+        <br>
+        {% for property in select_properties %}
+            <div class="w3-row-padding">
+                <div class="w3-col s8">
+                    <label>{{ property.display}}:</label><br>
+                    {% for option in property.options %}
+                        <label>{{ option.display }}</label>
+                        <input type="checkbox"  class="w3-check" name="{{ property.name }}" value="{{ option.key }}">
+                    {% endfor %}
+                </div>
+            </div>
+            <br>
+        {% endfor %}      
     </div>
-</div>
-
-
-
-    <label>Search</label>
-    <input class="w3-input w3-animate-input" type="text" placeholder="Search" name="query" style="width:30%">
-{% for property in select_properties %}
-    <h2>{{ property.display }}</h2>
-    {% for option in property.options %}
-        <label>{{ option.display }}</label>
-        <input type="checkbox"  class="w3-check" name="{{ property.name }}" value="{{ option.key }}">
-    {% endfor %}
-{% endfor %}
-    <br>
-    <button id="singlebutton" name="singlebutton" class="w3-button w3-round">Search</button>
-
 </form>
+
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
