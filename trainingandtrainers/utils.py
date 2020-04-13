@@ -1,9 +1,9 @@
 class PageSelectProperty:
-    def __init__(self, name, display, options, keylist = None):
+    def __init__(self, name, display, options, key_list=None):
         self.name = name
         self.options = parse_options(options)
         self.display = display
-        self.keylist = keylist
+        self.key_list = key_list
 
 
 class PageSelectOption:
@@ -12,12 +12,32 @@ class PageSelectOption:
         self.display = display
 
 
+class EventDay:
+    def __init__(self, day, event_list):
+        self.day = day
+        self.event_list = event_list
+
+
+def get_event_days(pages):
+    page_dict = {}
+    for page in pages:
+        date = page.specific.date
+        if date not in page_dict.keys():
+            page_dict[page.specific.date] = EventDay(date, [page])
+        else:
+            page_dict[page.specific.date].event_list.append(page)
+
+    event_list = list(page_dict.values())
+    event_list.sort(key=lambda ed: ed.day)
+    return event_list
+
+
 def parse_options(option_tuples):
     return map(lambda option: PageSelectOption(option[0], option[1]), option_tuples)
 
 
 def filter_children(page, clazz):
-    children = page.get_children()
+    children = page.get_children().live()
     content_children = []
     for child in children:
         for grandchild in child.get_children():
@@ -78,9 +98,9 @@ def apply_filters(page, request, exact_match_properties):
 
 
 def match_choices(choice_list, typed_page, prop):
-    if not prop.keylist:
+    if not prop.key_list:
         return match_choice(choice_list, getattr(typed_page, prop.name))
-    return any(match_choice == getattr(typed_page, key) for key in prop.keylist)
+    return any(match_choice == getattr(typed_page, key) for key in prop.key_list)
 
 
 def match_choice(choice_list, property_value):

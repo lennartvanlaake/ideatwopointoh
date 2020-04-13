@@ -2,45 +2,23 @@
 {% load wagtailcore_tags wagtailroutablepage_tags search_tags %}
 
 {% block content %}
-<body>
-    <div class="w3-row w3-container">      
-        <div class="w3-content">
-           <h5>{{page.intro|richtext}}</h5>
-        </div>
+<div class="w3-row w3-container">
+    <div class="w3-content">
+        <h5>{{page.intro|richtext}}</h5>
     </div>
-    <div class="container">  
-        {% search %}
-    </div>
-
-
+</div>
+<h1> This is the correct template </h1>
 
 <div class="w3-container">
-    <ul class="w3-ul w3-card w3-hoverable" class="w3-button">   
-        {% for post in events %}
-            
-                <li>
-                    <div class="w3-row">
-                        <a href="{% pageurl post %}">
-                            <div class="w3-twothird">
-                                <div class "w3-bar-item">
-                                    <h1>{{ post.title }}</h1>
-                                </div>
-                                <p>
-                                {% comment %} Category: {{post.specific.category}}, Level: {{post.specific.level}}, Target audience: {{post.specific.targetaudience}} {% endcomment %}
-                                </p>
-                            </div>
-                        </a>
-                        <div class="w3-third w3-right-align">
-                            <div class "w3-bar-item">
-                                <a href="{{post.specific.training.url}}">
-                                    <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </a>  
-        {% endfor %}        
+    <ul class="w3-ul w3-card w3-hoverable">
+        {% for day in event_days %}
+        <h1> The date! </h1>
+        <div class="w3-row">
+            <div class="w3-twothird">
+                <h2>{{ day.date }}</h2>
+            </div>
+        </div>
+        {% endfor %}
     </ul>
     <br>
     <br>
