@@ -23,10 +23,11 @@ COPY . /code/
 # Set the working directory to /code/
 WORKDIR /code/
 
-RUN python manage.py migrate --settings=idea2point0.settings.prod
+RUN python manage.py collectstatic
+RUN python manage.py migrate --settings=general.settings.prod
 RUN useradd wagtail
 RUN chown -R wagtail /code
 USER wagtail
 
 EXPOSE 8000
-CMD exec gunicorn idea2point0.wsgi:application --bind 0.0.0.0:8000 --workers 3
+CMD exec gunicorn general.wsgi:application --bind 0.0.0.0:8000 --workers 3
