@@ -12,12 +12,11 @@
         {% search %}
     </div>
 
-
+{% for post in trainers %}
 
 <div class="w3-container">
     <ul class="w3-ul w3-card w3-hoverable" class="w3-button">   
-        {% for post in trainers %}
-            
+        
                 <li>
                     <div class="w3-row">
                         <a href="{% pageurl post %}">
@@ -32,17 +31,15 @@
                         </a>
                         <div class="w3-third w3-right-align">
                             <div class "w3-bar-item">
-                                <a href="{{post.specific.training.url}}">
-                                    <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-                                </a>
+                                <img  src="{{post.specific.profilePicture.url}}" class="w3-circle w3-margin-bottom w3-image" style="max-width:64px" alt="Alps">
                             </div>
                         </div>
                     </div>
                 </li>
             </a>  
-        {% endfor %}        
+             
     </ul>
     <br>
     <br>
 </div>
-{% endblock %}
+ {% endfor %}  {% endblock %}
