@@ -23,11 +23,11 @@ class TrainingContentCollection(Page):
 
 
 class PedagogyContentCollection(Page):
-    subpage_types = ['TrainingContent']
+    subpage_types = ['PedagogyContent']
 
 
 class DebateContentCollection(Page):
-    subpage_types = ['TrainingContent']
+    subpage_types = ['DebateContent']
 
 
 class TrainerCollection(Page):
@@ -109,7 +109,7 @@ class IdeaEventIndex(Page, RoutablePageMixin):
 
 
 class IdeaTrainerIndex(Page, RoutablePageMixin):
-    subpage_types = ['Trainer']
+    subpage_types = ['TrainerCollection']
     languageList = ('languagesSpoken1', 'languagesSpoken2', 'languagesSpoken3')
     select_properties = (PageSelectProperty(languageList, 'Language spoken', LANGUAGE_CHOICES))
     query_properties = ('shortBio', 'name', 'country')
