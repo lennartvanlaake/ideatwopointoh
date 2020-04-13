@@ -199,7 +199,7 @@ class Trainer(Page):
         index.SearchField('languagesSpoken3')     
     ]
 
-    content_panels = [
+    content_panels = Page.content_panels + [
         FieldPanel('profilePicture'),
         FieldPanel('firstName'),
         FieldPanel('lastName'),
@@ -212,14 +212,17 @@ class Trainer(Page):
         FieldPanel('languagesSpoken3')
     ]
 
+     
+    # title = firstName + ' ' + lastName
 
-    def save(self, *args, **kwargs):
-        self.title = self.firstName + ' ' + self.lastName
-        siblings = self.get_siblings(inclusive=False)
-        for sibling in siblings:
-            if sibling.owner == self.owner:
-                raise ValidationError(ValidationError('Invalid value'))
-        super().save(*args, **kwargs)
+    #    def save(self, *args, **kwargs):
+    #     self.title = self.firstName + ' ' + self.lastName
+    #     siblings = self.get_siblings(inclusive=False)
+    #     for sibling in siblings:
+    #         if sibling.owner == self.owner:
+    #             raise ValidationError(ValidationError('Invalid value'))
+    #     self.slug = self.title    
+    #     super().save(*args, **kwargs)
 
 
 class TTTEvent(Page):

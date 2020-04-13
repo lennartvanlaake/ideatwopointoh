@@ -4,25 +4,33 @@
 
 
 {% block body_class %}template-ideaindexpage{% endblock %}
-1
+
+<div class="container"
 {% block content %}
     <h1>{{ page.title }}</h1>
 
     <div class="intro">{{ page.intro|richtext }}</div>
 
+    <div class="jumbotron">
     {% search %}
+    </div>
 
-    {% if search_term %}
-    <header class="page-header">
-        <h1 class="page-title">Search Results for <span>{{ search_type }}: {{ search_term }}</span></h1>
-    </header>
+    <div class="jumbotron">
+    
+    
+    {% if True %}
+    {% comment %} <header class="page-header"> {% endcomment %}
+        <h5 class="page-title">results</h1>
+    {% comment %} </header> {% endcomment %}
     {% endif %}
 
     {% for post in trainings %}
         <br>
         <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
-        {{ post.specific.intro }}
-        {{ post.specific.body|richtext }}
+        <p>Level,   category,  target audience,  language </p>
+        <p>{{ post.specific.level }},    {{ post.specific.category }},  {{ post.specific.targetAudience }},    {{ post.specific.language }}</p>
     {% endfor %}
+    </div>
+    </div>
 
 {% endblock %}
