@@ -12,7 +12,6 @@
         <h5>{{page.intro|richtext}}</h5>
       </div>
       <div class="w3-third w3-center">
-        <img src="\media\images\erasmus.max-800x600.jpg" class="w3-padding-" alt="leuk plaatje" style="width:100%"></img>
       </div>
     </div>
   </div>
@@ -22,8 +21,8 @@
     <div class="w3-third">
       <div class="w3-card w3-container">
         <h3>{{ page.section_one_title }}</h3><br>
-        <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-        {{page.section_one_blurp|richtext}}
+        <i class="fa fa-users w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+        {{ page.intro|richtext}}
         <a href="{{ page.section_one_link }}" class="w3-button w3-block w3-yellow" target="_blank">Go</a>
       </div>
     </div>
@@ -31,18 +30,18 @@
     <div class="w3-third">
       <div class="w3-card w3-container">
         <h3>{{ page.section_two_title }}</h3><br>
-        <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-        {{page.section_two_blurp|richtext}}
+        <i class="fa fa-book w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+        {{ page.intro|richtext}}
         <a href="{{ page.section_two_link }}" class="w3-button w3-block w3-yellow" target="_blank">Go</a>
         </div>
     </div>
 
     <div class="w3-third">
-      <div class="w3-card w3-container">
-        <h3>{{ page.section_three_title }}</h3><br> 
-        <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-        {{page.section_three_blurp|richtext}}
-        <a href="{{ page.section_three_link }}" class="w3-button w3-block w3-yellow wr-bottom" target="_blank">Go</a>
+      <div class="w3-card w3-container" style="min-height:460px">
+        <h3>{{ page.section_three_title }}</h3><br>
+        <i class="fa fa-calendar w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+        {{ page.intro|richtext}}
+        <a href="{{ page.section_three_link }}" class="w3-button w3-block w3-yellow" target="_blank">Go</a>
       </div>
     </div>
   </div>
