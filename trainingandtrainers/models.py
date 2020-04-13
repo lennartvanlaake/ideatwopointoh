@@ -76,9 +76,11 @@ class SearchableTrainingContent:
 
 class IdeaTrainingIndex(Page, RoutablePageMixin):
     subpage_types = ['TrainingContentCollection', 'PedagogyContentCollection', 'DebateContentCollection']
+    audienceList = ('targetAudience1', 'targetAudience2', 'targetAudience3', 'targetAudience4')
+
     select_properties = (PageSelectProperty('level', 'Level', LEVEL_CHOICES),
                          PageSelectProperty('category', 'Cateory', CATEGORY_CHOICES),
-                         PageSelectProperty('targetAudience', 'Target Audience', YEAR_IN_SCHOOL_CHOICES),
+                         PageSelectProperty('audience', 'Target Audience', YEAR_IN_SCHOOL_CHOICES, audienceList),
                          PageSelectProperty('language', 'Language', LANGUAGE_CHOICES))
     query_properties = ('summary', 'title')
 
@@ -111,7 +113,7 @@ class IdeaEventIndex(Page, RoutablePageMixin):
 class IdeaTrainerIndex(Page, RoutablePageMixin):
     subpage_types = ['TrainerCollection']
     languageList = ('languagesSpoken1', 'languagesSpoken2', 'languagesSpoken3')
-    select_properties = (PageSelectProperty(languageList, 'Language spoken', LANGUAGE_CHOICES))
+    select_properties = (PageSelectProperty('language', 'Language spoken', LANGUAGE_CHOICES, languageList))
     query_properties = ('shortBio', 'name', 'country')
 
     def get_context(self, request):
@@ -127,7 +129,10 @@ class IdeaTrainerIndex(Page, RoutablePageMixin):
 class PedagogyContent(Page, SearchableTrainingContent):
     category = models.CharField(default="Pedagogy", max_length=250)
     date = models.DateField("Training created", auto_now=True)
-    targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
+    targetAudience1 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
+    targetAudience2 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
+    targetAudience3 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
+    targetAudience4 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
     level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
     summary = models.CharField(max_length=3000)
@@ -135,7 +140,6 @@ class PedagogyContent(Page, SearchableTrainingContent):
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
 
     search_fields = Page.search_fields + [
-        index.SearchField('targetAudience'),
         index.SearchField('level'),
         index.SearchField('category'),
         index.SearchField('language'),
@@ -143,11 +147,14 @@ class PedagogyContent(Page, SearchableTrainingContent):
     ]
 
     content_panels = Page.content_panels + [
-        FieldPanel('targetAudience'),
         FieldPanel('level'),
         FieldPanel('language'),
         FieldPanel('summary'),
-        FieldPanel('training')
+        FieldPanel('training'),
+        FieldPanel('targetAudience1'),
+        FieldPanel('targetAudience2'),
+        FieldPanel('targetAudience3'),
+        FieldPanel('targetAudience4')
 
     ]
 
@@ -155,7 +162,11 @@ class PedagogyContent(Page, SearchableTrainingContent):
 class DebateContent(Page, SearchableTrainingContent):
     category = models.CharField(default="Debate", max_length=250)
     date = models.DateField("Training created", auto_now=True)
-    targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
+    targetAudience1 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
+    targetAudience2 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
+    targetAudience3 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
+    targetAudience4 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
+
     level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
     summary = models.CharField(max_length=3000)
@@ -163,7 +174,6 @@ class DebateContent(Page, SearchableTrainingContent):
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
 
     search_fields = Page.search_fields + [
-        index.SearchField('targetAudience'),
         index.SearchField('level'),
         index.SearchField('category'),
         index.SearchField('language'),
@@ -171,19 +181,24 @@ class DebateContent(Page, SearchableTrainingContent):
     ]
 
     content_panels = Page.content_panels + [
-        FieldPanel('targetAudience'),
         FieldPanel('level'),
         FieldPanel('language'),
         FieldPanel('summary'),
-        FieldPanel('training')
-
+        FieldPanel('training'),
+        FieldPanel('targetAudience1'),
+        FieldPanel('targetAudience2'),
+        FieldPanel('targetAudience3'),
+        FieldPanel('targetAudience4')
     ]
 
 
 class TrainingContent(Page, SearchableTrainingContent):
     category = models.CharField(default="Training", max_length=250)
     date = models.DateField("Training created", auto_now=True)
-    targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
+    targetAudience1 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
+    targetAudience2 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
+    targetAudience3 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
+    targetAudience4 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
     level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
     summary = models.CharField(max_length=3000)
@@ -191,19 +206,25 @@ class TrainingContent(Page, SearchableTrainingContent):
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
 
     search_fields = Page.search_fields + [
-        index.SearchField('targetAudience'),
         index.SearchField('level'),
         index.SearchField('category'),
         index.SearchField('language'),
-        index.SearchField('summary')
+        index.SearchField('summary'),
+        FieldPanel('targetAudience1'),
+        FieldPanel('targetAudience2'),
+        FieldPanel('targetAudience3'),
+        FieldPanel('targetAudience4')
     ]
 
     content_panels = Page.content_panels + [
-        FieldPanel('targetAudience'),
         FieldPanel('level'),
         FieldPanel('language'),
         FieldPanel('summary'),
-        FieldPanel('training')
+        FieldPanel('training'),
+        FieldPanel('targetAudience1'),
+        FieldPanel('targetAudience2'),
+        FieldPanel('targetAudience3'),
+        FieldPanel('targetAudience4')
 
     ]
 

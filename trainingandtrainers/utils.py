@@ -1,8 +1,9 @@
-class PageSelectProperty():
-    def __init__(self, name, display, options):
+class PageSelectProperty:
+    def __init__(self, name, display, options, keylist = None):
         self.name = name
         self.options = parse_options(options)
         self.display = display
+        self.keylist = keylist
 
 
 class PageSelectOption:
@@ -68,14 +69,19 @@ def apply_filters(page, request, exact_match_properties):
     match = True
     typed_page = page.specific
     for prop in exact_match_properties:
-        prop_name = prop.name
-        filter_choice = request.GET.getlist(prop_name)
-        if filter_choice is None or filter_choice == []:
+        choice_list = request.GET.getlist(prop.name)
+        if choice_list is None or choice_list == []:
             continue
-        if not match_choices(filter_choice, getattr(typed_page, prop_name)):
+        if not match_choices(choice_list, typed_page, prop):
             match = False
     return match
 
 
-def match_choices(choice_list, value):
-    return any(choice == value for choice in choice_list)
+def match_choices(choice_list, typed_page, prop):
+    if not prop.keylist:
+        return match_choice(choice_list, getattr(typed_page, prop.name))
+    return any(match_choice == getattr(typed_page, key) for key in prop.keylist)
+
+
+def match_choice(choice_list, property_value):
+    return any(choice == property_value for choice in choice_list)
