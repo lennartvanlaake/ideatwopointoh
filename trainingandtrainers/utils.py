@@ -15,6 +15,7 @@ class PageSelectOption:
 class EventDay:
     def __init__(self, day, event_list):
         self.day = day
+        self.display_day = day.strftime("%m/%d/%Y")
         self.event_list = event_list
 
 
@@ -67,7 +68,7 @@ def get_query_string(request):
 
 def apply_query(page, request, contains_properties):
     query_string = get_query_string(request)
-    if query_string is None:
+    if not query_string:
         return True
     for prop in contains_properties:
         if not hasattr(page, prop):
@@ -100,8 +101,15 @@ def apply_filters(page, request, exact_match_properties):
 def match_choices(choice_list, typed_page, prop):
     if not prop.key_list:
         return match_choice(choice_list, getattr(typed_page, prop.name))
-    return any(match_choice == getattr(typed_page, key) for key in prop.key_list)
+    for key in prop.key_list:
+        page_value = getattr(typed_page, key)
+        if match_choice(choice_list, page_value):
+            return True
+    return False
 
 
 def match_choice(choice_list, property_value):
-    return any(choice == property_value for choice in choice_list)
+    for choice in choice_list:
+        if choice == property_value:
+            return True
+    return False
