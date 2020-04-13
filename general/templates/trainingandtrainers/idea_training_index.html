@@ -1,36 +1,10 @@
 {% extends "base.html" %}
-
 {% load wagtailcore_tags wagtailroutablepage_tags search_tags %}
 
-
-{% block body_class %}template-ideaindexpage{% endblock %}
-
-<div class="container"
-{% block content %}
-    <h1>{{ page.title }}</h1>
-
-    <div class="intro">{{ page.intro|richtext }}</div>
-
-    <div class="jumbotron">
-    {% search %}
-    </div>
-
-    <div class="jumbotron">
+<div class="container" {% block content %}>
     
+  {% search %}
+
+{% endblock %}  
+
     
-    {% if True %}
-    {% comment %} <header class="page-header"> {% endcomment %}
-        <h5 class="page-title">results</h1>
-    {% comment %} </header> {% endcomment %}
-    {% endif %}
-
-    {% for post in trainings %}
-        <br>
-        <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
-        <p>Level,   category,  target audience,  language </p>
-        <p>{{ post.specific.level }},    {{ post.specific.category }},  {{ post.specific.targetAudience }},    {{ post.specific.language }}</p>
-    {% endfor %}
-    </div>
-    </div>
-
-{% endblock %}
