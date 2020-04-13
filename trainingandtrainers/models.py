@@ -35,19 +35,16 @@ class TrainerCollection(Page):
 
 
 YEAR_IN_SCHOOL_CHOICES = [
-    ('FR', 'Freshman'),
-    ('SO', 'Sophomore'),
-    ('JR', 'Junior'),
-    ('SR', 'Senior'),
-    ('GR', 'Graduate'),
+    ('primary', 'Primary Education'),
+    ('secondary', 'Secondary Education'),
+    ('tertiary', 'Tertiary Education'),
+    ('adult', 'Adult Education')
 ]
 
 LEVEL_CHOICES = [
-    ('1', '1'),
-    ('2', '2'),
-    ('3', '3'),
-    ('4', '4'),
-    ('5', '5'),
+    ('1', 'Beginner'),
+    ('2', 'Intermediate'),
+    ('3', 'Advanced')
 ]
 
 LANGUAGE_CHOICES = [
@@ -97,14 +94,14 @@ class IdeaTrainingIndex(Page, RoutablePageMixin):
 
 
 class IdeaEventIndex(Page, RoutablePageMixin):
-    child_page_types = ['trainingandtrainers.models.TrainingEvent', 'trainingandtrainers.models.TTTEvent']
+    subpage_types = ['TrainingEventsCollection', 'TrainTheTrainerEventsCollection']
     select_properties = (PageSelectProperty('typeTraining', 'training Type', TRAININGEVENT_CHOICES))
     query_properties = ('title', 'date', 'city', 'country', 'trainer1', 'trainer2', 'trainer3')
 
     def get_context(self, request):
         context = super().get_context(request)
         events = TrainingEvent.objects.all()
-        context['Events'] = events
+        context['events'] = events
         context['url'] = self.get_url(request)
         return context
 
@@ -112,7 +109,7 @@ class IdeaEventIndex(Page, RoutablePageMixin):
 
 
 class IdeaTrainerIndex(Page, RoutablePageMixin):
-    child_page_types = ['trainingandtrainers.models.Trainer']
+    subpage_types = ['Trainer']
     languageList = ('languagesSpoken1', 'languagesSpoken2', 'languagesSpoken3')
     select_properties = (PageSelectProperty(languageList, 'Language spoken', LANGUAGE_CHOICES))
     query_properties = ('shortBio', 'name', 'country')
@@ -120,7 +117,7 @@ class IdeaTrainerIndex(Page, RoutablePageMixin):
     def get_context(self, request):
         context = super().get_context(request)
         trainers = TrainingEvent.objects.all()
-        context['Trainers'] = trainers
+        context['trainers'] = trainers
         context['url'] = self.get_url(request)
         return context
 
@@ -128,7 +125,6 @@ class IdeaTrainerIndex(Page, RoutablePageMixin):
 
 
 class PedagogyContent(Page, SearchableTrainingContent):
-    parent_page_types = ['PedagogyContentCollection']
     category = models.CharField(default="Pedagogy", max_length=250)
     date = models.DateField("Training created", auto_now=True)
     targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
@@ -157,7 +153,6 @@ class PedagogyContent(Page, SearchableTrainingContent):
 
 
 class DebateContent(Page, SearchableTrainingContent):
-    parent_page_types = ['DebateContentCollection']
     category = models.CharField(default="Debate", max_length=250)
     date = models.DateField("Training created", auto_now=True)
     targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
@@ -186,7 +181,6 @@ class DebateContent(Page, SearchableTrainingContent):
 
 
 class TrainingContent(Page, SearchableTrainingContent):
-    parent_page_types = ['TrainingContentCollection']
     category = models.CharField(default="Training", max_length=250)
     date = models.DateField("Training created", auto_now=True)
     targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
@@ -215,8 +209,6 @@ class TrainingContent(Page, SearchableTrainingContent):
 
 
 class Trainer(Page):
-    parent_page_types = ['TrainerCollection']
-
     profilePicture = models.ImageField(upload_to='trainers/',
                                        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])])
     firstName = models.CharField(max_length=100)
@@ -263,8 +255,6 @@ class Trainer(Page):
 
 
 class TTTEvent(Page):
-    parent_page_types = ['TrainTheTrainerEventsCollection']
-
     date = models.DateTimeField("date and time of event")
     street = models.CharField("Street and number", max_length=100)
     city = models.CharField(max_length=100)
@@ -303,8 +293,6 @@ class TTTEvent(Page):
 
 
 class TrainingEvent(Page):
-    parent_page_types = ['TrainerCollection']
-
     Title = models.CharField(max_length=100)
     date = models.DateTimeField("date and time of event")
     street = models.CharField("Street and number", max_length=100, default="")
@@ -344,8 +332,6 @@ class TrainingEvent(Page):
 
 
 class BlankNewPage(Page):
-    parent_page_types = ['home.HomePage']
-
     body = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [

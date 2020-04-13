@@ -5,6 +5,7 @@ from wagtail.admin.edit_handlers import FieldPanel
 
 
 class HomePage(Page):
+    subpage_types = ['trainingandtrainers.IdeaEventIndex', 'trainingandtrainers.IdeaTrainerIndex', 'trainingandtrainers.IdeaTrainingIndex', 'trainingandtrainers.BlankNewPage']
     intro = RichTextField(blank=True)
     section_one_title = models.CharField(max_length=60, default="section_one_title")
     section_one_blurp = RichTextField(blank=True, default="section_one_blurp")
