@@ -126,13 +126,13 @@ class IdeaEventIndex(Page, RoutablePageMixin):
 class IdeaTrainerIndex(Page, RoutablePageMixin):
     subpage_types = ['TrainerCollection']
     languageList = ('languagesSpoken1', 'languagesSpoken2', 'languagesSpoken3')
-    select_properties = (PageSelectProperty('language', 'Language spoken', LANGUAGE_CHOICES, languageList))
-    query_properties = ('shortBio', 'name', 'country')
+    select_properties = [PageSelectProperty('language', 'Language spoken', LANGUAGE_CHOICES, languageList)]
+    query_properties = ('shortBio', 'firstName', 'lastName', 'country')
 
     def get_context(self, request):
         context = super().get_context(request)
-        trainers = filter_children(self, Trainer)
-        context['trainers'] = trainers
+        children = filter_children(self, Trainer)
+        context['trainers'] = filter_pages(children, request, self.select_properties, self.query_properties)
         context['select_properties'] = self.select_properties
         context['url'] = self.get_url(request)
         return context
