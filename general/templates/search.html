@@ -1,5 +1,37 @@
 <form role="search" method="get" class="form-search" name="query">
-<fieldset>
+    <fieldset>
+        <div class="w3-container">
+  <h2>Form Elements in a Grid</h2>
+  <p>In this example, we use W3.CSS' Responsive Grid System to make the inputs appear on the same line (on smaller screens, they will stack horizontally with 100% width). You will learn more about this later.</p>
+</div>
+<div class="w3-row-padding">
+<input class="w3-input w3-border" type="text">
+</div>
+<br>
+<div class="w3-row-padding">
+  <div class="w3-third">
+    <input class="w3-input w3-border" type="text" placeholder="One">
+  </div>
+  <div class="w3-third">
+    <input class="w3-input w3-border" type="text" placeholder="Two">
+  </div>
+  <div class="w3-third">
+    <input class="w3-input w3-border" type="text" placeholder="Three">
+  </div>
+</div>
+<br>
+
+<div class="w3-row-padding">
+  <div class="w3-third">
+    <input class="w3-input w3-border" type="text" placeholder="AA">
+  </div>
+  <div class="w3-third">
+    <input class="w3-input w3-border" type="text" placeholder="BB">
+  </div>
+  <div class="w3-third">
+    <input class="w3-input w3-border" type="text" placeholder="CC">
+  </div>
+</div>
 
 <div class="form-group">
     {% comment %} <label class="col-md-4 control-label" for="query">Search</label>   {% endcomment %}
