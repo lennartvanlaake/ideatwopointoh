@@ -8,8 +8,8 @@
     <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-dark w3-large w3-red"
        href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
     {% for item in menu_items %}
-    <a class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-right w3-hover-dark" href="/{{ item.href }}">{{
-      item.text }}</a>
+    <a class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-right w3-hover-dark" href="/{{ item.href }}">
+      {{item.text}}</a>
     {% endfor %}
   </div>
 </div>
