@@ -23,7 +23,7 @@ COPY . /code/
 # Set the working directory to /code/
 WORKDIR /code/
 
-RUN python manage.py migrate --settings=settings.prod
+RUN python manage.py migrate --settings=general.settings.prod
 RUN useradd wagtail
 RUN chown -R wagtail /code
 USER wagtail
