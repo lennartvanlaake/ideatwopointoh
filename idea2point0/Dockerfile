@@ -1,10 +1,16 @@
 # Use an official Python runtime as a parent image
-FROM python:3.7
+FROM python:3.8
 LABEL maintainer="hello@wagtail.io"
+
+ARG SECRET_KEY
+ENV SECRET_KEY $SECRET_KEY
+
+ARG POSTGRES_PASSWORD
+ENV POSTGRES_PASSWORD $POSTGRES_PASSWORD
 
 # Set environment varibles
 ENV PYTHONUNBUFFERED 1
-ENV DJANGO_ENV dev
+ENV DJANGO_ENV prod
 
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install --upgrade pip
@@ -17,8 +23,8 @@ COPY . /code/
 # Set the working directory to /code/
 WORKDIR /code/
 
-RUN python manage.py migrate
-
+RUN python manage.py collectstatic
+RUN python manage.py migrate --settings=idea2point0.settings.prod
 RUN useradd wagtail
 RUN chown -R wagtail /code
 USER wagtail

@@ -25,7 +25,6 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 INSTALLED_APPS = [
     'home',
-    'search',
     'trainingandtrainers',
     'wagtail.contrib.routable_page',
     'wagtail.contrib.modeladmin',
@@ -101,18 +100,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'django',
-#         'USER': 'django',
-#         'PASSWORD': 'django',
-#         'HOST': 'localhost',
-#         'PORT': '54321',
-#     }
-# }
-
 
 
 # Password validation

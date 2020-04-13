@@ -2,9 +2,11 @@ venv
 env
 node_modules
 *.pyc
+*.pdf
 .idea
 .next
 .vscode
 blog_python/media
 db.sqlite3
 __pycache__
+static/admin**
