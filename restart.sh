@@ -1,1 +1,1 @@
-python idea2point0/manage.py makemigrations && python idea2point0/manage.py migrate && python idea2point0/manage.py runserver 8001
+python manage.py makemigrations && python manage.py migrate && python manage.py runserver 8001

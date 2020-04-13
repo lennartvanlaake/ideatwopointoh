@@ -1,5 +1,5 @@
 """
-WSGI config for idea2point0 project.
+WSGI config for general project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "idea2point0.settings.prod")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "general.settings.prod")
 
 application = get_wsgi_application()
