@@ -20,29 +20,29 @@
   <!-- 3 boxes -->
   <div class="w3-row-padding w3-center w3-margin-top">
     <div class="w3-third">
-      <div class="w3-card w3-container" style="min-height:460px">
+      <div class="w3-card w3-container">
         <h3>{{ page.section_one_title }}</h3><br>
         <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-        {{ page.intro|richtext}}
+        {{page.section_one_blurp|richtext}}
         <a href="{{ page.section_one_link }}" class="w3-button w3-block w3-yellow" target="_blank">Go</a>
       </div>
     </div>
 
     <div class="w3-third">
-      <div class="w3-card w3-container" style="min-height:460px">
+      <div class="w3-card w3-container">
         <h3>{{ page.section_two_title }}</h3><br>
         <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-        {{ page.intro|richtext}}
+        {{page.section_two_blurp|richtext}}
         <a href="{{ page.section_two_link }}" class="w3-button w3-block w3-yellow" target="_blank">Go</a>
         </div>
     </div>
 
     <div class="w3-third">
-      <div class="w3-card w3-container" style="min-height:460px">
-        <h3>{{ page.section_three_title }}</h3><br>
+      <div class="w3-card w3-container">
+        <h3>{{ page.section_three_title }}</h3><br> 
         <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-        {{ page.intro|richtext}}
-        <a href="{{ page.section_three_link }}" class="w3-button w3-block w3-yellow" target="_blank">Go</a>
+        {{page.section_three_blurp|richtext}}
+        <a href="{{ page.section_three_link }}" class="w3-button w3-block w3-yellow wr-bottom" target="_blank">Go</a>
       </div>
     </div>
   </div>
