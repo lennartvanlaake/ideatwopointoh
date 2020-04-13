@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-training{% endblock %}
+
+{% block content %}
+
+<div class="w3-container w3-row">
+    <div class="w3-card w3-white w3-margin-large w3-padding-large">
+        <h2>Description:</h2>
+        {{ page.specific.description | richtext }}
+        <br>
+        <br>
+        <h3>Date: {{ date }}</h3>
+        <h3>Location:</h3>
+        <ul class="w3-ul">
+            <li>{{ page.specific.street}} - {{ page.specific.city}} - {{ page.specific.country}}</li>
+        </ul>
+        <h3>Trainers:</h3>
+        <ul class="w3-ul">
+            {% for trainer in trainers %}
+            {% if trainer %}
+            <li>{{ trainer }}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+
+        {% if page.specific.contactemail or page.specific.contactwebsite %}
+        <h3>Contact:</h3>
+        <ul class="w3-ul">
+            {% if page.specific.contactemail %}
+            <li>{{ page.specific.contactemail}}</li>
+            {% endif %}
+            {% if page.specific.contactwebsite %}
+            <li>{{ page.specific.contactwebsite}}</li>
+            {% endif %}
+        </ul>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

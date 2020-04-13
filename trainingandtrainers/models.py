@@ -308,6 +308,7 @@ class Trainer(Page):
 
 
 class TTTEvent(Page, SearchableEvent):
+    template = "trainingandtrainers/event.html"
     date = models.DateTimeField("date and time of event")
     street = models.CharField("Street and number", max_length=100)
     city = models.CharField(max_length=100)
@@ -345,11 +346,13 @@ class TTTEvent(Page, SearchableEvent):
 
     def get_context(self, request):
         context = super().get_context(request)
+        context['date'] = self.date.strftime("%m/%d/%Y")
         context['trainers'] = [self.trainer1, self.trainer2, self.trainer3]
         return context
 
 
 class TrainingEvent(Page, SearchableEvent):
+    template = "trainingandtrainers/event.html"
     Title = models.CharField(max_length=100)
     date = models.DateTimeField("date and time of event")
     street = models.CharField("Street and number", max_length=100, default="")
@@ -389,6 +392,7 @@ class TrainingEvent(Page, SearchableEvent):
 
     def get_context(self, request):
         context = super().get_context(request)
+        context['date'] = self.date.strftime("%m/%d/%Y")
         context['trainers'] = [self.trainer1, self.trainer2, self.trainer3]
         return context
 
