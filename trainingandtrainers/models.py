@@ -204,7 +204,7 @@ class Trainer(Page):
         index.SearchField('languagesSpoken3')
     ]
 
-    content_panels = [
+    content_panels = Page.content_panels + [
         FieldPanel('profilePicture'),
         FieldPanel('firstName'),
         FieldPanel('lastName'),

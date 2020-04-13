@@ -2,9 +2,9 @@
 <fieldset>
 
 <div class="form-group">
-    <label class="col-md-4 control-label" for="query">Search</label>  
+    {% comment %} <label class="col-md-4 control-label" for="query">Search</label>   {% endcomment %}
     <div class="col-md-4">
-    <input id="query" name="query" type="text" class="form-control input-md">
+    <input id="query" name="query" type="text" class="form-control input-md" placeholder="Search">
     </div>
 </div>
 
@@ -13,10 +13,10 @@
 {% for property in select_properties %}
 
     <div class="form-group">
-        <label class="col-md-4 control-label" for="selectbasic">{{ property.display }}</label>
+        {% comment %} <label class="col-md-4 control-label" for="selectbasic">{{ property.display }}</label> {% endcomment %}
         <div class="col-md-4">
             <select id="{{ property.name }}" name="{{ property.name }}" class="form-control">
-            <option value="">Any</option>
+            <option value="">{{ property.display }}</option>
             {% for option in property.options %}
                 <option value="{{ option.key }}">{{ option.display }}</option>
             {% endfor %}

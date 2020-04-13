@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-training{% endblock %}
+
+{% block content %}
+    <h4>{{page.title}}</h4>
+    <p class="meta">{{ page.date }}</p>
+    <br>
+    <br>
+    <br>
+    
+   <p>level: {{ page.level }}</p>
+   <p>category: {{ page.category }}</p>
+   <p>target audience: {{ page.targetAudience }}</p>
+   <p>language: {{ page.language }}</p>
+
+   
+
+   <br>
+   <br>
+   <br>
+
+
+    <p><a href="/bla">Return to main training page</a></p>
+
+{% endblock %}
