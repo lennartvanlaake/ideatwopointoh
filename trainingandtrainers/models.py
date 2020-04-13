@@ -146,7 +146,7 @@ class PedagogyContent(Page, SearchableTrainingContent):
     targetAudience4 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
     level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
-    summary = models.CharField(max_length=3000)
+    content = RichTextField(blank=True)
     training = models.FileField(upload_to='trainings/',
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
 
@@ -154,13 +154,13 @@ class PedagogyContent(Page, SearchableTrainingContent):
         index.SearchField('level'),
         index.SearchField('category'),
         index.SearchField('language'),
-        index.SearchField('summary')
+        index.SearchField('content')
     ]
 
     content_panels = Page.content_panels + [
         FieldPanel('level'),
         FieldPanel('language'),
-        FieldPanel('summary'),
+        FieldPanel('content'),
         FieldPanel('training'),
         FieldPanel('targetAudience1'),
         FieldPanel('targetAudience2'),
@@ -184,7 +184,7 @@ class DebateContent(Page, SearchableTrainingContent):
 
     level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
-    summary = models.CharField(max_length=3000)
+    content = RichTextField(blank=True)
     training = models.FileField(upload_to='trainings/',
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
     audiences = [targetAudience1, targetAudience2, targetAudience3, targetAudience4]
@@ -193,13 +193,13 @@ class DebateContent(Page, SearchableTrainingContent):
         index.SearchField('level'),
         index.SearchField('category'),
         index.SearchField('language'),
-        index.SearchField('summary')
+        index.SearchField('content')
     ]
 
     content_panels = Page.content_panels + [
         FieldPanel('level'),
         FieldPanel('language'),
-        FieldPanel('summary'),
+        FieldPanel('content'),
         FieldPanel('training'),
         FieldPanel('targetAudience1'),
         FieldPanel('targetAudience2'),
@@ -267,7 +267,8 @@ class Trainer(Page):
     languagesSpoken1 = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
     languagesSpoken2 = models.CharField(choices=LANGUAGE_CHOICES, max_length=250, blank=True)
     languagesSpoken3 = models.CharField(choices=LANGUAGE_CHOICES, max_length=250, blank=True)
-    shortBio = models.CharField(max_length=3000)
+    shortBio = RichTextField(blank=True)
+
 
     search_fields = Page.search_fields + [
         index.SearchField('firstName'),

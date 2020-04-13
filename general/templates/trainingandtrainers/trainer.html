@@ -1,17 +1,30 @@
 {% extends "base.html" %}
-
 {% load wagtailcore_tags %}
-
-{% block body_class %}template-training{% endblock %}
+{% load menu_tags %}
+{% load static wagtailuserbar %} 
 
 {% block content %}
-    <h1>{{ page.title }}</h1>
-    <p class="meta">{{ page.date }}</p>
 
-    <div id="intro" class="intro">{{ page.intro }}</div>
+<div class="w3-container"
+<div class="w3-row-padding">
+  <div class="w3-col w3-container" style="width:35%"></div>
+    <div class="w3-col w3-light-grey w3-container w3-card-4" style="width:30%">
+        <div class="w3-container w3-center">
+            <h2>{{ page.firstName}} {{ page.lastName}}</h2>
+            <img src="{{page.profilePicture.url}}" alt="picture" style="width:80% max-height:1px">
+            <h5>{{page.age}}</h5>
+            <h5>{{page.city}},  {{page.country}}</h5>
+            <h5>{{page.languagesSpoken1}}   {{page.languagesSpoken2}}   {{page.languagesSpoken3}}</h5>
+        </div>
+    </div>
+  <div class="w3-col w3-container" style="width:35%"></div>
+</div>
+</div>
 
-    {% comment %} {{ page.body|richtext }} {% endcomment %}
-
-    <p><a href="{{ page.get_parent.url }}">Return to index</a></p>
-
+<div class="w3-container"
+<br>
+<br>
+    {{page.shortBio|richtext}}
+</div>
+<br>
 {% endblock %}
