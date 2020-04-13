@@ -10,8 +10,6 @@ from wagtail.search import index
 from trainingandtrainers.utils import *
 
 
-
-
 # permission pages
 class TrainerPermission(Page):
     subpage_types = ['TrainingContent', 'TrainingEvent', 'Trainer']
