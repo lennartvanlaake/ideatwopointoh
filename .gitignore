@@ -6,7 +6,8 @@ node_modules
 .idea
 .next
 .vscode
-blog_python/media
 db.sqlite3
 __pycache__
-static/admin**
+static/**
+media/**
+
