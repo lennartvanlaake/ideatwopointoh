@@ -1,37 +1,15 @@
-<form role="search" method="get" class="form-search" name="query">
-<fieldset>
+<form role="search" method="get" class="w3-container w3-card-4 w3-padding-large">
 
-<div class="form-group">
-    {% comment %} <label class="col-md-4 control-label" for="query">Search</label>   {% endcomment %}
-    <div class="col-md-4">
-    <input id="query" name="query" type="text" class="form-control input-md" placeholder="Search">
-    </div>
-</div>
-
-
-
+    <label>Search</label>
+    <input class="w3-input w3-animate-input" type="text" placeholder="Search" name="query" style="width:30%">
 {% for property in select_properties %}
-
-    <div class="form-group">
-        {% comment %} <label class="col-md-4 control-label" for="selectbasic">{{ property.display }}</label> {% endcomment %}
-        <div class="col-md-4">
-            <select id="{{ property.name }}" name="{{ property.name }}" class="form-control">
-            <option value="">{{ property.display }}</option>
-            {% for option in property.options %}
-                <option value="{{ option.key }}">{{ option.display }}</option>
-            {% endfor %}
-            </select>
-        </div>
-    </div>
-
+    <h2>{{ property.display }}</h2>
+    {% for option in property.options %}
+        <label>{{ option.display }}</label>
+        <input type="checkbox"  class="w3-check" name="{{ property.name }}" value="{{ option.key }}">
+    {% endfor %}
 {% endfor %}
+    <br>
+    <button id="singlebutton" name="singlebutton" class="w3-button w3-round">Search</button>
 
-
-
-<div class="form-group">
-    <div class="col-md-4">
-        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Search</button>
-    </div>
-</div>
-</fieldset>
 </form>

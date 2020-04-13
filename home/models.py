@@ -3,6 +3,7 @@ from wagtail.core.models import Page
 from wagtail.core.fields import RichTextField
 from wagtail.admin.edit_handlers import FieldPanel
 
+
 class HomePage(Page):
     intro = RichTextField(blank=True)
     section_one_title = models.CharField(max_length=60, default="section_one_title")
@@ -27,4 +28,3 @@ class HomePage(Page):
         FieldPanel('section_three_blurp', classname="full"),
         FieldPanel('section_three_link', classname="full"),
     ]
-

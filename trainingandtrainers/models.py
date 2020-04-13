@@ -10,17 +10,28 @@ from wagtail.search import index
 from trainingandtrainers.utils import *
 
 
-# permission pages
-class TrainerPermission(Page):
-    subpage_types = ['TrainingContent', 'TrainingEvent', 'Trainer']
+class TrainingEventsCollection(Page):
+    subpage_types = ['TrainingEvent']
 
 
-class MasterTrainerPermission(Page):
-    subpage_types = ['TrainingContent', 'TTTEvent']
+class TrainTheTrainerEventsCollection(Page):
+    subpage_types = ['TTTEvent']
 
 
-class SteeringComPermission(Page):
-    subpage_types = ['AllContent', 'TTTEvent', 'BlankNewPage']
+class TrainingContentCollection(Page):
+    subpage_types = ['TrainingContent']
+
+
+class PedagogyContentCollection(Page):
+    subpage_types = ['TrainingContent']
+
+
+class DebateContentCollection(Page):
+    subpage_types = ['TrainingContent']
+
+
+class TrainerCollection(Page):
+    subpage_types = ['Trainer']
 
 
 YEAR_IN_SCHOOL_CHOICES = [
@@ -62,12 +73,12 @@ TRAININGEVENT_CHOICES = [
 ]
 
 
-class TrainingIndexChildren():
+class SearchableTrainingContent:
     pass
 
 
 class IdeaTrainingIndex(Page, RoutablePageMixin):
-    child_page_types = ['TrainerPermission', 'MasterTrainerPermission']
+    subpage_types = ['TrainingContentCollection', 'PedagogyContentCollection', 'DebateContentCollection']
     select_properties = (PageSelectProperty('level', 'Level', LEVEL_CHOICES),
                          PageSelectProperty('category', 'Cateory', CATEGORY_CHOICES),
                          PageSelectProperty('targetAudience', 'Target Audience', YEAR_IN_SCHOOL_CHOICES),
@@ -76,7 +87,7 @@ class IdeaTrainingIndex(Page, RoutablePageMixin):
 
     def get_context(self, request):
         context = super().get_context(request)
-        children = filter_children(self, TrainingIndexChildren)
+        children = filter_children(self, SearchableTrainingContent)
         context['select_properties'] = self.select_properties
         context['trainings'] = filter_pages(children, request, self.select_properties, self.query_properties)
         context['url'] = self.get_url(request)
@@ -116,17 +127,16 @@ class IdeaTrainerIndex(Page, RoutablePageMixin):
     intro = RichTextField(blank=True)
 
 
-class TrainingContent(Page, TrainingIndexChildren):
-    parent_page_types = ['TrainerPermission', 'MasterTrainerPermission']
-
+class PedagogyContent(Page, SearchableTrainingContent):
+    parent_page_types = ['PedagogyContentCollection']
+    category = models.CharField(default="Pedagogy", max_length=250)
     date = models.DateField("Training created", auto_now=True)
     targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
     level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
-    category = models.CharField(default='Training', max_length=250)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
     summary = models.CharField(max_length=3000)
     training = models.FileField(upload_to='trainings/',
-                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
 
     search_fields = Page.search_fields + [
         index.SearchField('targetAudience'),
@@ -142,16 +152,45 @@ class TrainingContent(Page, TrainingIndexChildren):
         FieldPanel('language'),
         FieldPanel('summary'),
         FieldPanel('training')
+
     ]
 
 
-class AllContent(Page, TrainingIndexChildren):
-    parent_page_types = ['SteeringComPermission']
-
+class DebateContent(Page, SearchableTrainingContent):
+    parent_page_types = ['DebateContentCollection']
+    category = models.CharField(default="Debate", max_length=250)
     date = models.DateField("Training created", auto_now=True)
     targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
     level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=250)
+    language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
+    summary = models.CharField(max_length=3000)
+    training = models.FileField(upload_to='trainings/',
+                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
+
+    search_fields = Page.search_fields + [
+        index.SearchField('targetAudience'),
+        index.SearchField('level'),
+        index.SearchField('category'),
+        index.SearchField('language'),
+        index.SearchField('summary')
+    ]
+
+    content_panels = Page.content_panels + [
+        FieldPanel('targetAudience'),
+        FieldPanel('level'),
+        FieldPanel('language'),
+        FieldPanel('summary'),
+        FieldPanel('training')
+
+    ]
+
+
+class TrainingContent(Page, SearchableTrainingContent):
+    parent_page_types = ['TrainingContentCollection']
+    category = models.CharField(default="Training", max_length=250)
+    date = models.DateField("Training created", auto_now=True)
+    targetAudience = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
+    level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
     summary = models.CharField(max_length=3000)
     training = models.FileField(upload_to='trainings/',
@@ -169,7 +208,6 @@ class AllContent(Page, TrainingIndexChildren):
         FieldPanel('targetAudience'),
         FieldPanel('level'),
         FieldPanel('language'),
-        FieldPanel('category'),
         FieldPanel('summary'),
         FieldPanel('training')
 
@@ -177,7 +215,7 @@ class AllContent(Page, TrainingIndexChildren):
 
 
 class Trainer(Page):
-    parent_page_types = ['TrainerPermission']
+    parent_page_types = ['TrainerCollection']
 
     profilePicture = models.ImageField(upload_to='trainers/',
                                        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])])
@@ -225,7 +263,7 @@ class Trainer(Page):
 
 
 class TTTEvent(Page):
-    parent_page_types = ['SteeringComPermission', 'MasterTrainerPermission']
+    parent_page_types = ['TrainTheTrainerEventsCollection']
 
     date = models.DateTimeField("date and time of event")
     street = models.CharField("Street and number", max_length=100)
@@ -265,7 +303,7 @@ class TTTEvent(Page):
 
 
 class TrainingEvent(Page):
-    parent_page_types = ['TrainerPermission']
+    parent_page_types = ['TrainerCollection']
 
     Title = models.CharField(max_length=100)
     date = models.DateTimeField("date and time of event")
@@ -306,7 +344,7 @@ class TrainingEvent(Page):
 
 
 class BlankNewPage(Page):
-    parent_page_types = ['SteeringComPermission']
+    parent_page_types = ['home.HomePage']
 
     body = RichTextField(blank=True)
 
