@@ -1,10 +1,17 @@
-{% extends "base.html" %}
-
 {% load wagtailcore_tags %}
-
-{% block body_class %}template-training{% endblock %}
+{% load menu_tags %}
+{% load static wagtailuserbar %} 
 
 {% block content %}
+
+<div class="w3-row w3-container">      
+    <div class="w3-content">
+       <h5>{{page.title}}</h5>
+    </div>
+    </div>
+    <div class="container">  
+        {% search %}
+    </div>
     <h1>{{ page.title }}</h1>
     <p class="meta">{{ page.date }}</p>
 

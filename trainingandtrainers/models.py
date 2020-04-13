@@ -104,15 +104,12 @@ class SearchableEvent:
 
 class IdeaEventIndex(Page, RoutablePageMixin):
     subpage_types = ['TrainingEventsCollection', 'TrainTheTrainerEventsCollection']
-    select_properties = [PageSelectProperty('typeTraining', 'training Type', TRAININGEVENT_CHOICES)]
-    query_properties = ('title', 'date', 'city', 'country', 'trainer1', 'trainer2', 'trainer3')
 
     def get_context(self, request):
         context = super().get_context(request)
         children = filter_children(self, SearchableEvent)
-        context['events'] = filter_pages(children, request, self.select_properties, self.query_properties)
+        context['event_days'] = get_event_days(children)
         context['url'] = self.get_url(request)
-        context['select_properties'] = self.select_properties
         
         return context
 
@@ -153,7 +150,7 @@ class PedagogyContent(Page, SearchableTrainingContent):
     targetAudience4 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250, blank=True)
     level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
-    summary = models.CharField(max_length=3000)
+    content = RichTextField(blank=True)
     training = models.FileField(upload_to='trainings/',
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
 
@@ -161,13 +158,13 @@ class PedagogyContent(Page, SearchableTrainingContent):
         index.SearchField('level'),
         index.SearchField('category'),
         index.SearchField('language'),
-        index.SearchField('summary')
+        index.SearchField('content')
     ]
 
     content_panels = Page.content_panels + [
         FieldPanel('level'),
         FieldPanel('language'),
-        FieldPanel('summary'),
+        FieldPanel('content'),
         FieldPanel('training'),
         FieldPanel('targetAudience1'),
         FieldPanel('targetAudience2'),
@@ -175,6 +172,9 @@ class PedagogyContent(Page, SearchableTrainingContent):
         FieldPanel('targetAudience4')
 
     ]
+
+    def get_audiences(self):
+        return filter(list(self.targetAudience1, self.targetAudience2, self.targetAudience3, self.targetAudience4))
 
 
 class DebateContent(Page, SearchableTrainingContent):
@@ -187,7 +187,7 @@ class DebateContent(Page, SearchableTrainingContent):
 
     level = models.CharField(choices=LEVEL_CHOICES, max_length=250)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
-    summary = models.CharField(max_length=3000)
+    content = RichTextField(blank=True)
     training = models.FileField(upload_to='trainings/',
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
 
@@ -195,19 +195,22 @@ class DebateContent(Page, SearchableTrainingContent):
         index.SearchField('level'),
         index.SearchField('category'),
         index.SearchField('language'),
-        index.SearchField('summary')
+        index.SearchField('content')
     ]
 
     content_panels = Page.content_panels + [
         FieldPanel('level'),
         FieldPanel('language'),
-        FieldPanel('summary'),
+        FieldPanel('content'),
         FieldPanel('training'),
         FieldPanel('targetAudience1'),
         FieldPanel('targetAudience2'),
         FieldPanel('targetAudience3'),
         FieldPanel('targetAudience4')
     ]
+
+    def get_audiences(self):
+        return filter(list(self.targetAudience1, self.targetAudience2, self.targetAudience3, self.targetAudience4))
 
 
 class TrainingContent(Page, SearchableTrainingContent):
@@ -246,6 +249,10 @@ class TrainingContent(Page, SearchableTrainingContent):
 
     ]
 
+    def get_audiences(self):
+        return filter(
+            list(self.specific.targetAudience1, self.targetAudience2, self.targetAudience3, self.targetAudience4))
+
 
 class Trainer(Page):
     profilePicture = models.ImageField(upload_to='trainers/',
@@ -255,13 +262,11 @@ class Trainer(Page):
     age = models.IntegerField()
     city = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
-    # languagesSpoken = models.MultiSelectField(choices=LANGUAGE_CHOICES, max_length=250)
     languagesSpoken1 = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
     languagesSpoken2 = models.CharField(choices=LANGUAGE_CHOICES, max_length=250, blank=True)
     languagesSpoken3 = models.CharField(choices=LANGUAGE_CHOICES, max_length=250, blank=True)
-    shortBio = models.CharField(max_length=3000)
-    # python alreadyExists = models.IntegerField(default=0)
-  
+    shortBio = RichTextField(blank=True)
+
 
     search_fields = Page.search_fields + [
         index.SearchField('firstName'),
@@ -292,6 +297,9 @@ class Trainer(Page):
             if sibling.owner == self.owner:
                 raise ValidationError(ValidationError('Invalid value'))
         super().save(*args, **kwargs)
+
+    def get_languages(self):
+        return filter(list(self.languagesSpoken1, self.languagesSpoken2, self.languagesSpoken3))
 
 
 class TTTEvent(Page, SearchableEvent):
