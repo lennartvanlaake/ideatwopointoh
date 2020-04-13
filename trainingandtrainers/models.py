@@ -35,16 +35,16 @@ class TrainerCollection(Page):
 
 
 YEAR_IN_SCHOOL_CHOICES = [
-    ('primary', 'Primary Education'),
-    ('secondary', 'Secondary Education'),
-    ('tertiary', 'Tertiary Education'),
-    ('adult', 'Adult Education')
+    ('Primary Education', 'Primary Education'),
+    ('Secondary Education', 'Secondary Education'),
+    ('Tertiary Education', 'Tertiary Education'),
+    ('Adult Education', 'Adult Education')
 ]
 
 LEVEL_CHOICES = [
-    ('1', 'Beginner'),
-    ('2', 'Intermediate'),
-    ('3', 'Advanced')
+    ('Beginner', 'Beginner'),
+    ('Intermediate', 'Intermediate'),
+    ('Advanced', 'Advanced')
 ]
 
 LANGUAGE_CHOICES = [
@@ -89,7 +89,6 @@ class IdeaTrainingIndex(Page, RoutablePageMixin):
         children = filter_children(self, SearchableTrainingContent)
         context['select_properties'] = self.select_properties
         context['trainings'] = filter_pages(children, request, self.select_properties, self.query_properties)
-        context['url'] = self.get_url(request)
         return context
 
     intro = RichTextField(blank=True)
@@ -109,8 +108,6 @@ class IdeaEventIndex(Page, RoutablePageMixin):
         context = super().get_context(request)
         children = filter_children(self, SearchableEvent)
         context['event_days'] = get_event_days(children)
-        context['url'] = self.get_url(request)
-        
         return context
 
     intro = RichTextField(blank=True)
@@ -131,7 +128,6 @@ class IdeaTrainerIndex(Page, RoutablePageMixin):
         children = filter_children(self, Trainer)
         context['trainers'] = filter_pages(children, request, self.select_properties, self.query_properties)
         context['select_properties'] = self.select_properties
-        context['url'] = self.get_url(request)
         return context
 
     intro = RichTextField(blank=True)
@@ -170,11 +166,12 @@ class PedagogyContent(Page, SearchableTrainingContent):
         FieldPanel('targetAudience2'),
         FieldPanel('targetAudience3'),
         FieldPanel('targetAudience4')
-
     ]
 
-    def get_audiences(self):
-        return filter(list(self.targetAudience1, self.targetAudience2, self.targetAudience3, self.targetAudience4))
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['audiences'] = [self.targetAudience1, self.targetAudience2, self.targetAudience3, self.targetAudience4]
+        return context
 
 
 class DebateContent(Page, SearchableTrainingContent):
@@ -190,6 +187,7 @@ class DebateContent(Page, SearchableTrainingContent):
     summary = models.CharField(max_length=3000)
     training = models.FileField(upload_to='trainings/',
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
+    audiences = [targetAudience1, targetAudience2, targetAudience3, targetAudience4]
 
     search_fields = Page.search_fields + [
         index.SearchField('level'),
@@ -225,6 +223,7 @@ class TrainingContent(Page, SearchableTrainingContent):
     summary = models.CharField(max_length=3000)
     training = models.FileField(upload_to='trainings/',
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+    audiences = [targetAudience1, targetAudience2, targetAudience3, targetAudience4]
 
     search_fields = Page.search_fields + [
         index.SearchField('level'),
@@ -249,9 +248,10 @@ class TrainingContent(Page, SearchableTrainingContent):
 
     ]
 
-    def get_audiences(self):
-        return filter(
-            list(self.specific.targetAudience1, self.targetAudience2, self.targetAudience3, self.targetAudience4))
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['audiences'] = [self.targetAudience1, self.targetAudience2, self.targetAudience3, self.targetAudience4]
+        return context
 
 
 class Trainer(Page):

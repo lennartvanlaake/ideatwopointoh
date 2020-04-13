@@ -5,24 +5,27 @@
 {% block body_class %}template-training{% endblock %}
 
 {% block content %}
-    <h4>{{page.title}}</h4>
-    <p class="meta">{{ page.date }}</p>
-    <br>
-    <br>
-    <br>
-    
-   <p>level: {{ page.level }}</p>
-   <p>category: {{ page.category }}</p>
-   <p>target audience: {{ page.targetAudience }}</p>
-   <p>language: {{ page.language }}</p>
+<h4>{{page.title}}</h4>
+<p class="meta">{{ page.date }}</p>
+<br>
+<br>
+<br>
 
-   
-
-   <br>
-   <br>
-   <br>
+<p>level: {{ page.level }}</p>
+<p>category: {{ page.category }}</p>
+<p>target audiences:
+<ul>{% for audience in audiences %}
+    <li>{{ audience }}</li>
+    {% endfor %}
+</ul></p>
+<p>language: {{ page.language }}</p>
 
 
-    <p><a href="/bla">Return to main training page</a></p>
+<br>
+<br>
+<br>
+
+
+<p><a href="/bla">Return to main training page</a></p>
 
 {% endblock %}
