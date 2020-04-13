@@ -138,6 +138,7 @@ class IdeaTrainerIndex(Page, RoutablePageMixin):
 
 
 class PedagogyContent(Page, SearchableTrainingContent):
+    template="trainingandtrainers/debate_content.html"
     category = models.CharField(default="Pedagogy", max_length=250)
     date = models.DateField("Training created", auto_now=True)
     targetAudience1 = models.CharField(choices=YEAR_IN_SCHOOL_CHOICES, max_length=250)
