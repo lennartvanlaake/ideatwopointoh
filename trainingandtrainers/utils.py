@@ -15,6 +15,7 @@ class PageSelectOption:
 class EventDay:
     def __init__(self, day, event_list):
         self.day = day
+        self.display_day = day.strftime("%m/%d/%Y")
         self.event_list = event_list
 
 

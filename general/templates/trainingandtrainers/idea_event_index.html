@@ -7,20 +7,24 @@
         <h5>{{page.intro|richtext}}</h5>
     </div>
 </div>
-<h1> This is the correct template </h1>
+
+{% for day in event_days %}
 
 <div class="w3-container">
-    <ul class="w3-ul w3-card w3-hoverable">
-        {% for day in event_days %}
-        <h1> The date! </h1>
-        <div class="w3-row">
-            <div class="w3-twothird">
-                <h2>{{ day.date }}</h2>
-            </div>
+    <ul class="w3-ul w3-hoverable">
+        <div class="w3-container w3-twothird w3-card w3-grey">
+            <h2>Date: {{ day.display_day }}</h2>
         </div>
+        {% for event in day.event_list %}
+        <a href="{% pageurl event %}">
+            <div class="w3-container w3-twothird w3-card w3-white">
+                <h2>{{ event.title }}: {{ event.specific.city}} - {{ event.specific.country }}</h2>
+            </div>
+        </a>
         {% endfor %}
     </ul>
-    <br>
-    <br>
 </div>
+{% endfor %}
+
+
 {% endblock %}
