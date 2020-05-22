@@ -31,12 +31,14 @@
                             </div>
                         </a>
                         <div class="w3-third w3-right-align">
+                            {% if post.specific.training %}
                             <div class="w3-bar-item">
-                                <a href="{% if post.specific.training %}{{ post.specific.training.url }}{% endif %}">
+                                <a href="{{ post.specific.training.url }}">
                                     <i class="fa fa-download w3-margin-bottom w3-text-theme"
                                        style="font-size:120px"></i>
                                 </a>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </li>
