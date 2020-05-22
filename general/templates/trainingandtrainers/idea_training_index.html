@@ -8,7 +8,7 @@
            <h5>{{page.intro|richtext}}</h5>
         </div>
     </div>
-    <div class="container">  
+    <div class="container">
         {% search %}
     </div>
 
@@ -22,7 +22,7 @@
                     <div class="w3-row">
                         <a href="{% pageurl post %}">
                             <div class="w3-twothird">
-                                <div class "w3-bar-item">
+                                <div class="w3-bar-item">
                                     <h1>{{ post.title }}</h1>
                                 </div>
                                 <p>
@@ -31,8 +31,8 @@
                             </div>
                         </a>
                         <div class="w3-third w3-right-align">
-                            <div class "w3-bar-item">
-                                <a href="{{post.specific.training.url}}">
+                            <div class="w3-bar-item">
+                                <a href="{% if post.specific.training %}{{ post.specific.training.url }}{% endif %}">
                                     <i class="fa fa-download w3-margin-bottom w3-text-theme"
                                        style="font-size:120px"></i>
                                 </a>
