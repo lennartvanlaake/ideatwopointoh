@@ -187,7 +187,7 @@ class DebateContent(Page, SearchableTrainingContent):
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=250)
     content = RichTextField(blank=True)
     training = models.FileField(upload_to='trainings/',
-                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True)
+                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])], blank=True, null=True)
     audiences = [targetAudience1, targetAudience2, targetAudience3, targetAudience4]
 
     search_fields = Page.search_fields + [
