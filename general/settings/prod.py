@@ -1,4 +1,7 @@
 from .base import *
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 try:
     from .local import *
 except ImportError:
@@ -6,7 +9,12 @@ except ImportError:
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'empoweryouth2debate.com' ] 
+sentry_sdk.init(
+    dsn="https://d9b20c83c5fa4ba280c39f89de9bea17@o396671.ingest.sentry.io/5250303",
+    integrations=[DjangoIntegration()],
+)
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'empoweryouth2debate.com']
 SECRET_KEY = os.environ["SECRET_KEY"]
 password = os.environ['POSTGRES_PASSWORD']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -29,7 +37,7 @@ LOGGING = {
         }
     },
     'handlers': {
-        'gunicorn': {
+        'logfile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
@@ -38,10 +46,10 @@ LOGGING = {
         }
     },
     'loggers': {
-        'gunicorn.errors': {
+        'django': {
+            'handlers': ['logfile'],
             'level': 'DEBUG',
-            'handlers': ['gunicorn'],
             'propagate': True,
-        },
+        }
     }
 }
